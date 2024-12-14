@@ -374,10 +374,10 @@ public struct ChatView<MessageContent: View, InputViewContent: View, MenuAction:
             isShowingMenu: $isShowingMenu,
             menuButtonsSize: $menuButtonsSize,
             alignment: row.message.user.isCurrentUser ? .right : .left,
-            leadingPadding: avatarSize + MessageView.horizontalAvatarPadding * 2,
+            leadingPadding: MessageView.horizontalAvatarPadding * 4,
             trailingPadding: MessageView.statusViewSize + MessageView.horizontalStatusPadding,
             onAction: menuActionClosure(row.message)) {
-                ChatMessageView(viewModel: viewModel, messageBuilder: messageBuilder, row: row, chatType: type, avatarSize: avatarSize, tapAvatarClosure: nil, messageUseMarkdown: messageUseMarkdown, isDisplayingMessageMenu: true, showMessageTimeView: showMessageTimeView, messageFont: messageFont)
+                ChatMessageView(viewModel: viewModel, messageBuilder: messageBuilder, row: row, chatType: type, avatarSize: 0, tapAvatarClosure: nil, messageUseMarkdown: messageUseMarkdown, isDisplayingMessageMenu: true, showMessageTimeView: showMessageTimeView, messageFont: messageFont)
                     .onTapGesture {
                         hideMessageMenu()
                     }
@@ -403,7 +403,7 @@ public struct ChatView<MessageContent: View, InputViewContent: View, MenuAction:
 
     func showMessageMenu(_ cellFrame: CGRect) {
         DispatchQueue.main.async {
-            let wholeMenuHeight = (menuButtonsSize.height * 4) + cellFrame.height
+            let wholeMenuHeight = menuButtonsSize.height + cellFrame.height
             let needsScrollTemp = wholeMenuHeight > UIScreen.main.bounds.height - safeAreaInsets.top - safeAreaInsets.bottom
 
             menuCellPosition = CGPoint(x: cellFrame.midX, y: cellFrame.minY + wholeMenuHeight/2 - safeAreaInsets.top)
