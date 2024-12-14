@@ -382,7 +382,7 @@ public struct ChatView<MessageContent: View, InputViewContent: View, MenuAction:
                         hideMessageMenu()
                     }
             }
-            .frame(height: menuButtonsSize.height + (cellFrames[row.id]?.height ?? 0), alignment: .top)
+            .frame(height: (menuButtonsSize.height * 4) + (cellFrames[row.id]?.height ?? 0), alignment: .top)
             .opacity(menuCellOpacity)
     }
 
@@ -403,7 +403,7 @@ public struct ChatView<MessageContent: View, InputViewContent: View, MenuAction:
 
     func showMessageMenu(_ cellFrame: CGRect) {
         DispatchQueue.main.async {
-            let wholeMenuHeight = menuButtonsSize.height + cellFrame.height
+            let wholeMenuHeight = (menuButtonsSize.height * 4) + cellFrame.height
             let needsScrollTemp = wholeMenuHeight > UIScreen.main.bounds.height - safeAreaInsets.top - safeAreaInsets.bottom
 
             menuCellPosition = CGPoint(x: cellFrame.midX, y: cellFrame.minY + wholeMenuHeight/2 - safeAreaInsets.top)
