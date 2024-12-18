@@ -8,7 +8,6 @@
 import SwiftUI
 import FloatingButton
 import SwiftUIIntrospect
-import ExyteMediaPicker
 
 public typealias MediaPickerParameters = SelectionParamsHolder
 
@@ -181,8 +180,16 @@ public struct ChatView<MessageContent: View, InputViewContent: View, MenuAction:
             }
 
             .fullScreenCover(isPresented: $inputViewModel.showPicker) {
-                AttachmentsEditor(inputViewModel: inputViewModel, inputViewBuilder: inputViewBuilder, chatTitle: chatTitle, messageUseMarkdown: messageUseMarkdown, orientationHandler: orientationHandler, mediaPickerSelectionParameters: mediaPickerSelectionParameters, availableInput: availablelInput)
-                    .environmentObject(globalFocusState)
+                AttachmentsEditor<InputViewContent, EmptyView, EmptyView>(
+                    inputViewModel: inputViewModel,
+                    inputViewBuilder: inputViewBuilder,
+                    chatTitle: chatTitle,
+                    messageUseMarkdown: messageUseMarkdown,
+                    orientationHandler: orientationHandler,
+                    mediaPickerSelectionParameters: mediaPickerSelectionParameters,
+                    availableInput: availablelInput
+                )
+                .environmentObject(globalFocusState)
             }
 
             .onChange(of: inputViewModel.showPicker) {

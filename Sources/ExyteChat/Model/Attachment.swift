@@ -3,7 +3,11 @@
 //
 
 import Foundation
-import ExyteMediaPicker
+
+public enum MediaType {
+    case image
+    case video
+}
 
 public enum AttachmentType: String, Codable {
     case image
@@ -22,7 +26,7 @@ public enum AttachmentType: String, Codable {
         switch mediaType {
         case .image:
             self = .image
-        default:
+        case .video:
             self = .video
         }
     }

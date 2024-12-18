@@ -23,7 +23,6 @@ Pod::Spec.new do |s|
   s.resources = "Sources/ExyteChat/Resources/**/*"
 
   s.dependency 'SwiftUIIntrospect'
-  s.dependency 'ExyteMediaPicker'
   s.dependency 'FloatingButton'
   s.dependency 'ActivityIndicatorView'
   s.dependency 'ExytePopupView'

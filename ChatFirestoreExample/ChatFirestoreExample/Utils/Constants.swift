@@ -5,9 +5,8 @@
 //  Created by Alisa Mylnikova on 10.07.2023.
 //
 
-import SwiftUI
+import Foundation
 import ExyteChat
-import ExyteMediaPicker
 
 struct Collection {
     static let users = "users"
@@ -53,4 +52,4 @@ var dataStorage = DataStorageManager.shared
 public typealias User = ExyteChat.User
 public typealias Message = ExyteChat.Message
 public typealias Recording = ExyteChat.Recording
-public typealias Media = ExyteMediaPicker.Media
+public typealias Media = ExyteChat.Media

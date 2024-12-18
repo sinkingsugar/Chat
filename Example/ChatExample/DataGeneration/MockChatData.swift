@@ -5,7 +5,6 @@
 import Foundation
 import UIKit
 import ExyteChat
-import ExyteMediaPicker
 
 final class MockChatData {
 

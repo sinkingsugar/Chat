@@ -6,10 +6,9 @@
 //
 
 import SwiftUI
-import ExyteMediaPicker
 import ActivityIndicatorView
 
-struct AttachmentsEditor<InputViewContent: View>: View {
+struct AttachmentsEditor<InputViewContent: View, AlbumSelectionContent: View, CameraSelectionContent: View>: View {
 
     typealias InputViewBuilderClosure = ChatView<EmptyView, InputViewContent, DefaultMessageMenuAction>.InputViewBuilderClosure
 
@@ -35,70 +34,81 @@ struct AttachmentsEditor<InputViewContent: View>: View {
         inputViewModel.mediaPickerMode == .albums
     }
 
-    var body: some View {
+    public var body: some View {
         ZStack {
             mediaPicker
-
             if inputViewModel.showActivityIndicator {
                 ActivityIndicator()
             }
         }
     }
 
-    var mediaPicker: some View {
-        GeometryReader { g in
-            MediaPicker(isPresented: $inputViewModel.showPicker) {
-                seleсtedMedias = $0
-                assembleSelectedMedia()
-            } albumSelectionBuilder: { _, albumSelectionView, _ in
-                VStack {
-                    albumSelectionHeaderView
-                        .padding(.top, g.safeAreaInsets.top)
-                    albumSelectionView
-                    Spacer()
-                    inputView
-                        .padding(.bottom, g.safeAreaInsets.bottom)
-                }
-                .background(pickerTheme.main.albumSelectionBackground)
-                .ignoresSafeArea()
-            } cameraSelectionBuilder: { _, cancelClosure, cameraSelectionView in
-                VStack {
-                    cameraSelectionHeaderView(cancelClosure: cancelClosure)
-                        .padding(.top, g.safeAreaInsets.top)
-                    cameraSelectionView
-                    Spacer()
-                    inputView
-                        .padding(.bottom, g.safeAreaInsets.bottom)
-                }
-                .ignoresSafeArea()
-            }
-            .didPressCancelCamera {
-                inputViewModel.showPicker = false
-            }
-            .currentFullscreenMedia($currentFullscreenMedia)
-            .showLiveCameraCell()
-            .setSelectionParameters(mediaPickerSelectionParameters)
-            .pickerMode($inputViewModel.mediaPickerMode)
-            .orientationHandler(orientationHandler)
-            .padding(.top)
-            .background(pickerTheme.main.albumSelectionBackground)
-            .ignoresSafeArea(.all)
-            .onChange(of: currentFullscreenMedia) { newValue in
-                assembleSelectedMedia()
-            }
-            .onChange(of: inputViewModel.showPicker) { _ in
-                let showFullscreenPreview = mediaPickerSelectionParameters?.showFullscreenPreview ?? true
-                let selectionLimit = mediaPickerSelectionParameters?.selectionLimit ?? 1
+    private var mediaPicker: some View {
+        GeometryReader { geometry in
+            mediaPickerContent(geometry)
+        }
+    }
 
-                if selectionLimit == 1 && !showFullscreenPreview {
-                    assembleSelectedMedia()
-                    inputViewModel.send()
-                }
+    private func mediaPickerContent(_ geometry: GeometryProxy) -> some View {
+        MediaPicker(isPresented: $inputViewModel.showPicker) {
+            seleсtedMedias = $0
+            assembleSelectedMedia()
+        } albumSelectionBuilder: { mode, albumSelectionView, cancelClosure in
+            AnyView(albumSelectionContainer(geometry, mode: mode, albumSelectionView: albumSelectionView, cancelClosure: cancelClosure))
+        } cameraSelectionBuilder: { mode, cancelClosure, cameraSelectionView in
+            AnyView(cameraSelectionContainer(geometry, mode: mode, cancelClosure: cancelClosure, cameraSelectionView: cameraSelectionView))
+        }
+        .didPressCancelCamera {
+            inputViewModel.showPicker = false
+        }
+        .currentFullscreenMedia($currentFullscreenMedia)
+        .showLiveCameraCell()
+        .setSelectionParameters(mediaPickerSelectionParameters)
+        .pickerMode($inputViewModel.mediaPickerMode)
+        .orientationHandler(orientationHandler)
+        .padding(.top)
+        .background(pickerTheme?.main.albumSelectionBackground ?? .black)
+        .ignoresSafeArea(.all)
+        .onChange(of: currentFullscreenMedia) { newValue in
+            assembleSelectedMedia()
+        }
+        .onChange(of: inputViewModel.showPicker) { _ in
+            let showFullscreenPreview = mediaPickerSelectionParameters?.showFullscreenPreview ?? true
+            let selectionLimit = mediaPickerSelectionParameters?.selectionLimit ?? 1
+
+            if selectionLimit == 1 && !showFullscreenPreview {
+                assembleSelectedMedia()
+                inputViewModel.send()
             }
         }
     }
 
-    func assembleSelectedMedia() {
+    private func albumSelectionContainer(_ geometry: GeometryProxy, mode: MediaPickerMode, albumSelectionView: AlbumSelectionContent, cancelClosure: @escaping () -> Void) -> some View {
+        VStack {
+            albumSelectionHeaderView
+                .padding(.top, geometry.safeAreaInsets.top)
+            albumSelectionView
+            Spacer()
+            inputView
+                .padding(.bottom, geometry.safeAreaInsets.bottom)
+        }
+        .background(pickerTheme?.main.albumSelectionBackground ?? .black)
+        .ignoresSafeArea()
+    }
+
+    private func cameraSelectionContainer(_ geometry: GeometryProxy, mode: MediaPickerMode, cancelClosure: @escaping () -> Void, cameraSelectionView: CameraSelectionContent) -> some View {
+        VStack {
+            cameraSelectionHeaderView(cancelClosure: cancelClosure)
+                .padding(.top, geometry.safeAreaInsets.top)
+            cameraSelectionView
+            Spacer()
+            inputView
+                .padding(.bottom, geometry.safeAreaInsets.bottom)
+        }
+        .ignoresSafeArea()
+    }
+
+    private func assembleSelectedMedia() {
         if !seleсtedMedias.isEmpty {
             inputViewModel.attachments.medias = seleсtedMedias
         } else if let media = currentFullscreenMedia {
@@ -109,7 +119,7 @@ struct AttachmentsEditor<InputViewContent: View>: View {
     }
 
     @ViewBuilder
-    var inputView: some View {
+    private var inputView: some View {
         Group {
             if let inputViewBuilder = inputViewBuilder {
                 inputViewBuilder($inputViewModel.text, inputViewModel.attachments, inputViewModel.state, .signature, inputViewModel.inputViewAction()) {
@@ -127,7 +137,7 @@ struct AttachmentsEditor<InputViewContent: View>: View {
         }
     }
 
-    var albumSelectionHeaderView: some View {
+    private var albumSelectionHeaderView: some View {
         ZStack {
             HStack {
                 Button {
@@ -158,7 +168,7 @@ struct AttachmentsEditor<InputViewContent: View>: View {
         .padding(.bottom, 5)
     }
 
-    func cameraSelectionHeaderView(cancelClosure: @escaping ()->()) -> some View {
+    private func cameraSelectionHeaderView(cancelClosure: @escaping ()->()) -> some View {
         HStack {
             Button {
                 cancelClosure()

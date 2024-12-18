@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import ExyteMediaPicker
 
 public enum InputViewStyle {
     case message
@@ -523,7 +522,7 @@ struct InputView: View {
         case .message:
             return theme.colors.mainBackground
         case .signature:
-            return pickerTheme.main.albumSelectionBackground
+            return pickerTheme?.main.albumSelectionBackground ?? .black
         }
     }
 

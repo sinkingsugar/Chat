@@ -3,7 +3,7 @@
 //
 
 import SwiftUI
-import ExyteMediaPicker
+import ExyteChat
 
 struct ContentView: View {
     var body: some View {

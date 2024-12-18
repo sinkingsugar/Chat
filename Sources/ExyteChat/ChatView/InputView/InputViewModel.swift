@@ -4,7 +4,7 @@
 
 import Foundation
 import Combine
-import ExyteMediaPicker
+import SwiftUI
 
 final class InputViewModel: ObservableObject {
 
