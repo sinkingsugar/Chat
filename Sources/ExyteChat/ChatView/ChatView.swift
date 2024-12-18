@@ -411,7 +411,7 @@ public struct ChatView<MessageContent: View, InputViewContent: View, MenuAction:
     func showMessageMenu(_ cellFrame: CGRect) {
         DispatchQueue.main.async {
             let wholeMenuHeight = menuButtonsSize.height + cellFrame.height
-            let needsScrollTemp = wholeMenuHeight > UIScreen.main.bounds.height - safeAreaInsets.top - safeAreaInsets.bottom
+            let needsScrollTemp = wholeMenuHeight > ScreenUtils.height - safeAreaInsets.top - safeAreaInsets.bottom
 
             menuCellPosition = CGPoint(x: cellFrame.midX, y: cellFrame.minY + wholeMenuHeight/2 - safeAreaInsets.top)
             menuCellOpacity = 1
@@ -419,9 +419,9 @@ public struct ChatView<MessageContent: View, InputViewContent: View, MenuAction:
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                 var finalCellPosition = menuCellPosition
                 if needsScrollTemp ||
-                    cellFrame.minY + wholeMenuHeight + safeAreaInsets.bottom > UIScreen.main.bounds.height {
+                    cellFrame.minY + wholeMenuHeight + safeAreaInsets.bottom > ScreenUtils.height {
 
-                    finalCellPosition = CGPoint(x: cellFrame.midX, y: UIScreen.main.bounds.height - wholeMenuHeight/2 - safeAreaInsets.top - safeAreaInsets.bottom
+                    finalCellPosition = CGPoint(x: cellFrame.midX, y: ScreenUtils.height - wholeMenuHeight/2 - safeAreaInsets.top - safeAreaInsets.bottom
                     )
                 }
 

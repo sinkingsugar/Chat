@@ -54,8 +54,6 @@ struct RecordWaveformWithButtons: View {
 
 struct RecordWaveformPlaying: View {
 
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-
     var samples: [CGFloat] // 0...1
     var progress: CGFloat
     var color: Color
@@ -89,7 +87,7 @@ struct RecordWaveformPlaying: View {
     }
 
     func adjustedSamples(_ width: CGFloat) -> [CGFloat] {
-        let maxWidth = addExtraDots ? width : width * 0.8
+        let maxWidth = addExtraDots ? width : ScreenUtils.width
         let maxSamples = Int(maxWidth / (RecordWaveform.width + RecordWaveform.spacing))
 
         var adjusted = samples

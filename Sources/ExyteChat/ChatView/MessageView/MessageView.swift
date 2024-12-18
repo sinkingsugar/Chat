@@ -48,7 +48,7 @@ struct MessageView: View {
     var dateArrangement: DateArrangement {
         let timeWidth = timeSize.width + 10
         let textPaddings = MessageView.horizontalTextPadding * 2
-        let widthWithoutMedia = UIScreen.main.bounds.width
+        let widthWithoutMedia = ScreenUtils.width
         - (message.user.isCurrentUser ? MessageView.horizontalNoAvatarPadding : avatarViewSize.width)
         - statusSize.width
         - MessageView.horizontalBubblePadding
@@ -117,7 +117,7 @@ struct MessageView: View {
         .padding(.bottom, bottomPadding)
         .padding(.trailing, message.user.isCurrentUser ? MessageView.horizontalNoAvatarPadding : 0)
         .padding(message.user.isCurrentUser ? .leading : .trailing, MessageView.horizontalBubblePadding)
-        .frame(maxWidth: UIScreen.main.bounds.width, alignment: message.user.isCurrentUser ? .trailing : .leading)
+        .frame(maxWidth: ScreenUtils.width, alignment: message.user.isCurrentUser ? .trailing : .leading)
     }
 
     @ViewBuilder

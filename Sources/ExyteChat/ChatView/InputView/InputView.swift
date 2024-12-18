@@ -545,7 +545,7 @@ struct InputView: View {
                     onAction(.recordAudioLock)
                 }
 
-                if value.location.x < UIScreen.main.bounds.width/2,
+                if value.location.x < ScreenUtils.width/2,
                    value.location.y > recordButtonFrame.minY {
                     cancelGesture = true
                     onAction(.deleteRecord)

@@ -14,7 +14,7 @@ public extension View {
     func onStatusBarTap(onTap: @escaping () -> ()) -> some View {
         self.overlay {
             StatusBarTabDetector(onTap: onTap)
-                .offset(x: UIScreen.main.bounds.width)
+                .offset(x: ScreenUtils.width)
         }
     }
 }
@@ -28,7 +28,7 @@ private struct StatusBarTabDetector: UIViewRepresentable {
         fakeScrollView.contentOffset = CGPoint(x: 0, y: 10)
         fakeScrollView.delegate = context.coordinator
         fakeScrollView.scrollsToTop = true
-        fakeScrollView.contentSize = CGSize(width: 100, height: UIScreen.main.bounds.height * 2)
+        fakeScrollView.contentSize = CGSize(width: 100, height: ScreenUtils.height * 2)
         return fakeScrollView
     }
 
